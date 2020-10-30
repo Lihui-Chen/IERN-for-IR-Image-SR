@@ -27,7 +27,6 @@ datasets:
 # hyper-parameters of network architecture
 networks:
     which_model: EDenseUpDown
-#    growthRate: 16
     num_features: 64
     compress: 32
     in_channels: 3

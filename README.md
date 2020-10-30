@@ -1,97 +1,72 @@
 # IRSR
 
-# 1. Ablation Study
+# 0. Introduction
 
-| Methods | SRDenN | V1woRes | V1+Res | V3 | V1+LocR | V1+CA | V1LocR+CA |V1+LocR+dbpn |
-| ------- | ------ | ----------- | ---------- | ------ | ------------ |----------|----------|----------|
-| PSNR    | 30.05  | 29.52       | 29.75      | 29.83  | 29.83        | 29.68    | 29.73    |30.05 |
-| SSIM    | 0.9711 | 0.9669      | 0.9677     | 0.9684 | 0.9694       | 0.9683   | 0.9683   |0.9697 |
-| Paras.  | 4.63M  | 792K        | 792K       | 907K   | 825K         |801K      |834K      |1,088K |
+Codes for paper: Chen, L., Tang, R., Anisetti, M., & Yang, X. (2020). A Lightweight Iterative Error Reconstruction Network for Infrared Image Super-Resolution in Smart Grid. *Sustainable Cities and Society*, 102520.
 
-# 2.  Study DC
+```latex
+@article{chen2020lightweight,
+  title={A Lightweight Iterative Error Reconstruction Network for Infrared Image Super-Resolution in Smart Grid},
+  author={Chen, Lihui and Tang, Rui and Anisetti, Marco and Yang, Xiaomin},
+  journal={Sustainable Cities and Society},
+  pages={102520},
+  year={2020},
+  publisher={Elsevier}
+}
+```
 
-| srdensenetC=4 | D=4 | D=8 | D=12 | D=16 |
-| ------- | ------ | ----------- | ---------- | ------ | 
-| PSNR              |29.07  | 30.05       | 30.16      | 30.16  | 
-| SSIM    |          0.9702 | 0.9711    | 0.9721     | 0.9723 | 
-| Paras.           | 3.11M | 4.63        | 6.74M       | 9.44M   | 
+# 1. Requirements
 
-| srdensenetV2C=4 | D=4 | D=8 | D=12 | D=16 |
-| ------- | ------ | ----------- | ---------- | ------ | 
-| PSNR              |29.83  | 30.05       | 30.16      | 30.16  | 
-| SSIM    |          0.9690 | 0.9711    | 0.9721     | 0.9723 | 
-| Paras.           | 2.489M | 4.63        | 6.74M       | 9.44M   | 
+1. python3
 
+2. tqdm
+3. opencv-python
+4. pytorch(>=1.6)
+5. torchvision
+6. yaml
 
-   
-| edeenseupdownC=4 | D=4    |  D=8 | D=12         | D=16 |
-| ------- | ------ | ----------- | ----------     | ------ | 
-| PSNR              | 29.92 | 30.01  |  30.08   | 30.03 | 
-| SSIM    |       0.9702    | 0.9708 |    0.9710  | 0.9711 | 
-| Paras.           |  744K |   1.09M|   1.43M   | 1.78M   | 
+# 2.  Test 
 
+1. Clone this repository:
 
+   ```bash
+   git clone https://github.com/Huises/IERN-for-IR-Image-SR.git
+   ```
 
-| edeenseupdownD=4 | C=4    |  C=8 | C=12     | C=16 |
-| ------- | ------ | ----------- | ----------     | ------ | 
-| PSNR            | 29.92 |  30.01 |              30.02      | 30.12 | 
-| SSIM    |    0.9702       | 0.9709|           0.9710      | 0.9716 | 
-| Paras.           |  744 | 1.07M  |    1.40M  |  1.73M  | 
+2. Then, cd to **IERN-for-IR-Image-SR** and run **the commands** for evaluation on *GIR50 and Infrared20*   (or your own images) :
 
+   ```bash
+   python test.py -opt options/test/test.yml #test GIR50 and Infrared20
+   python test.py -opt options/test/test.yml -lr_path your_img_path # test your own images
+   ```
 
-
-
-| edeenseupdownC=4 | D=4    |  D=8 | D=12         | D=16 |
-| ------- | ------ | ----------- | ----------     | ------ | 
-| PSNR              | 29.92 | 30.01  |  30.08   | 30.03 | 
-| SSIM    |       0.9702    | 0.9708 |    0.9710  | 0.9711 | 
-| Paras.           |  744K |   1.09M|   1.43M   | 1.78M   | 
+3. Finally, you can find the reconstruction images in `./results`.
 
 
 
-| edsrbaselinefor50image | x2   |  x3 | x4     |
-| ------- | ------ | ----------- | ----------     |  
-| PSNR      | 35.76  |      31.75             |  30.09
-| SSIM    |     0.9863     | 0.9774|             0.9695    |  
-| Paras.           | 1,369,883 |  1,554,523 |   1,517,595    |  
-| multiadds.  | 316.3G |  | 114.24G |  
-
-| bicubicfor50image | x2   |  x3 | x4     |
-| ------- | ------ | ----------- | ----------     |  
-| PSNR    /   | 31.90  |            29.30       |  28.52
-| SSIM    |      0.9191    | 0.9649|          0.9549      |  
+# 3. Train
 
 
 
-| srcnnfor50image | x2   |  x3 | x4     |
-| ------- | ------ | ----------- | ----------     |  
-| PSNR    /   | 33.80  |            30.62       |  29.48
-| SSIM    |      0.9831    | 0.9727|          0.9641       |  
+1. Prepare train set and validation set use **./scripts/Prepare_TrainData_HR_LR.m** or **./scripts/Prepare_TrainData_HR_LR.py**
+
+2. Clone this repository:
+
+   ```bash
+   git clone https://github.com/Huises/IERN-for-IR-Image-SR.git
+   ```
+
+3. Open **IERN-for-IR-Image-SR/options/train/train.yml**. Then, modify image paths for  train and validation set 
+
+4. Then，cd to **IERN-for-IR-Image-SR** and run **the commands** for evaluation 
+
+   ```bash
+   python train.py -opt options/train/train.yml  # train your own models
+   ```
 
 
 
-| IMDN50image | x2   |  x3 | x4     |
-| ------- | ------ | ----------- | ----------     |  
-| PSNR    /   |   |            31.99      |  30.14
-| SSIM    |          | 0.9780|          0.9698       | 
+# Acknowledgements
 
-| oisr-rk2s50image | x2   |  x3 | x4     |
-| ------- | ------ | ----------- | ----------     |  
-| PSNR      |  35.86 |                  |  
-| SSIM    |     0.9865     | |                | 
+​	Thank [Paper99](https://github.com/Paper99). Our code structure is derived from his repository [SRFBN](https://github.com/Paper99/SRFBN_CVPR19).
 
-
-
-
-
-
-| bicubicfor20image | x2   |  x3 | x4     |
-| ------- | ------ | ----------- | ----------     |  
-| PSNR    /   | 42.87  |            40.07       |  38.05
-| SSIM    |      0.9656   | 0.9515|          0.9389   |
-
-
-| srcnnfor20image | x2   |  x3 | x4     |
-| ------- | ------ | ----------- | ----------     |  
-| PSNR    /   | 44.16  |            41.99       |  40.13
-| SSIM    |      0.9687    | 0.9572|          0.9469       | 
