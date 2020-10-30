@@ -1,0 +1,41 @@
+mode: sr
+gpu_ids: [0]
+scale: 4
+degradation: BI
+is_train: false
+use_chop: true
+rgb_range: 255
+self_ensemble: false
+save_image: true
+
+# test data sets
+datasets:
+    test_set1:
+        mode: LRHR
+        dataroot_HR: val_test_img/test_mod_x4
+        dataroot_LR: val_test_img/test_LR_x4
+        data_type: img
+
+    test_set2:
+         mode: LRHR
+         dataroot_HR: val_test_img/infrared20_mod_x4
+         dataroot_LR: val_test_img/infrared20_LR_x4
+
+         data_type: img
+
+
+# hyper-parameters of network architecture
+networks:
+    which_model: EDenseUpDown
+#    growthRate: 16
+    num_features: 64
+    compress: 32
+    in_channels: 3
+    iterations: 2
+    nDenselayer: 8
+    nBlock: 8
+    scale: 4
+
+# the path of pre-trained model
+solver:
+    pretrained_path: models/IERN.pth

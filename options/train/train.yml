@@ -1,0 +1,59 @@
+mode: sr
+gpu_ids: [0]
+scale: 4  #todo:
+is_train: true
+rgb_range: 255
+self_ensemble: false # only used for testing
+use_chop: false
+save_image: false
+
+datasets:
+    train: # train datasets
+        mode: LRHR
+        dataroot_HR: /media/ser606/Data/291_mod_x4
+        dataroot_LR: /media/ser606/Data/291_LR_x4
+        data_type: npy
+        n_workers: 4
+        batch_size: 320
+        LR_size: 32
+        use_flip: true
+        use_rot: true
+        noise: .
+
+    val: # validation datasets
+        mode: LRHR
+#        dataroot_HR: val_test_img/5images_mod_x4
+#        dataroot_LR: val_test_img/5images_LR_x4
+        dataroot_HR: val_test_img/test_mod_x4
+        dataroot_LR: val_test_img/test_LR_x4
+        data_type: img
+
+## hyper-parameters for network architecture
+networks:
+    which_model: EDenseUpDown_depthwisev1 # this value of must be same with the filename of 'your_network_name'.py
+    growthRate: 16
+    num_features: 64
+    compress: 32
+    in_channels: 3
+    iterations: 2
+    nDenselayer: 8
+    nBlock: 8 # the block in each IRU is nblock/2
+
+# the setting for optimizer, loss function, learning_strategy, etc.
+solver:
+    type: ADAM
+    learning_rate: 0.0001
+    weight_decay: 0
+    lr_scheme: MultiStepLR
+    lr_steps: [200, 400, 600, 800]
+    lr_gamma: 0.5
+    loss_type: myloss
+    manual_seed: 0
+    num_epochs: 1000
+    skip_threshold: 3
+    split_batch: 2
+    save_ckp_step: 50
+    save_vis_step: 1
+    pretrain: finetune
+    pretrained_path: experiments/EDENSEUPDOWN_DEPTHWISEv1_finetune_finetune/epochs/best_ckp.pth
+
